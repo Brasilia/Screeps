@@ -28,10 +28,7 @@ var roleUpgrader = {
             }
         }
         else {
-            var sources = roomMemory.sources;
-            if(creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(sources[0]);
-            }
+            creep.withdrawEnergyFromClosestContainer();
         }
 	}
 };
