@@ -16,13 +16,32 @@ module.exports.loop = function () {
             console.log('Clearing non-existing creep memory:', name);
         }
     }
-    
+
+    var tower = Game.getObjectById('583a8f5241c739212e902d4c');
+    if(tower) {
+        var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+        if(closestHostile) {
+            tower.attack(closestHostile);
+        } else {
+            //console.log('noHostiles');
+            var closestDamagedWall = tower.pos.findClosestByRange(FIND_STRUCTURES, {
+                filter: (structure) => (structure.hits < structure.hitsMax * 0.00004 && structure.structureType == STRUCTURE_WALL) || (structure.hits < structure.hitsMax * 0.01 && structure.structureType == STRUCTURE_RAMPART)
+            });
+            //console.log(closestDamagedWall);
+            if(closestDamagedWall){
+                tower.repair(closestDamagedWall);
+            }
+        }
+
+    }
+
+
     for (var name in Game.rooms){
         var room = Game.rooms[name];
         roomManager.setup(room);
     }
     structureSpawner.run(Game.spawns['Spawn1']);
-    
+
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
         if(creep.memory.role == 'harvester') {

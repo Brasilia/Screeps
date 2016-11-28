@@ -19,10 +19,13 @@ module.exports = function() {
     function(){
         //var closestContID = this.pos.findClosestByPath(this.room.memory.containers).id;
         if (!this.memory.closestContainerID){
-            this.memory.closestContainerID = this.pos.findClosestByPath(this.room.memory.containersNotEmpty).id;
-            if (!this.memory.closestContainerID){
-                //try alternative energy source - otimizar
-                this.harvestFromSource();
+            var closest = this.pos.findClosestByPath(this.room.memory.containersNotEmpty);
+            if (closest){
+                this.memory.closestContainerID = closest.id;
+                if (!this.memory.closestContainerID){
+                    //try alternative energy source - otimizar
+                    this.harvestFromSource();
+                }
             }
         } else { //already knows destination
             var targetContainer = Game.getObjectById(this.memory.closestContainerID);

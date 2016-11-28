@@ -6,25 +6,25 @@ var roleRepairer = {
     run: function(creep) {
         var roomMemory = creep.room.memory;
         creep.pickupClosestEnergy();
-        
-	    if(creep.memory.building && creep.carry.energy == 0) {
+
+        if(creep.memory.building && creep.carry.energy == 0) {
             creep.memory.building = false;
             creep.say('harvesting');
-	    }
-	    if(!creep.memory.building && creep.carry.energy == creep.carryCapacity) {
-	        creep.memory.building = true;
-	        creep.say('repairing');
-	    }
+        }
+        if(!creep.memory.building && creep.carry.energy == creep.carryCapacity) {
+            creep.memory.building = true;
+            creep.say('repairing');
+        }
 
-	    if(creep.memory.building) {
-	        creep.memory.hpThreshold = 0.25;
-	        do {
-	            var closestDamagedStructure = creep.pos.findClosestByPath(roomMemory.structures, {
-                    filter: (structure) => structure.hits < structure.hitsMax * creep.memory.hpThreshold
+        if(creep.memory.building) {
+            creep.memory.hpThreshold = 0.25;
+            do {
+                var closestDamagedStructure = creep.pos.findClosestByPath(roomMemory.structures, {
+                    filter: (structure) => structure.hits < structure.hitsMax * creep.memory.hpThreshold && structure.structureType != STRUCTURE_WALL && structure.structureType != STRUCTURE_RAMPART
                 });
                 creep.memory.hpThreshold += 0.25;
-	        } while(!closestDamagedStructure && creep.memory.hpThreshold <= 1);
-	        
+            } while(!closestDamagedStructure && creep.memory.hpThreshold < 1);
+
             if(closestDamagedStructure) {
                 if (creep.repair(closestDamagedStructure) == ERR_NOT_IN_RANGE){
                     creep.moveTo(closestDamagedStructure);
@@ -32,11 +32,11 @@ var roleRepairer = {
             } else { // no construction sites
                 creep.memory.role = 'upgrader';
             }
-	    }
-	    else {
-	        creep.harvestFromSource();
-	    }
-	}
+        }
+        else {
+            creep.harvestFromSource();
+        }
+    }
 };
 
 module.exports = roleRepairer;
