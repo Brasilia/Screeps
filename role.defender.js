@@ -53,7 +53,7 @@ var roleDefender = {
         //Atacar
         if (creep.memory.source == 2){
 
-            //creep.moveTo(Game.flags['Attack1']);
+            creep.moveTo(Game.flags['Attack1']); return;
             var target = Game.flags['Attack1'].pos.findClosestByRange(FIND_STRUCTURES,
                 {filter: (structure) =>
                 structure.structureType == STRUCTURE_EXTENSION ||
@@ -107,6 +107,45 @@ var roleDefender = {
         }
 
 
+
+        //Curar
+        if (creep.memory.source == 4){
+            var closestDamagedMyCreep = creep.pos.findClosestByRange(FIND_MY_CREEPS, {filter: (c) => c.hits < c.hitsMax});
+            if (closestDamagedMyCreep){
+                //creep.moveTo(closestDamagedMyCreep);
+                creep.heal(closestDamagedMyCreep);
+            } else {
+                creep.moveTo(Game.flags['Heal1']);
+            }
+        }
+
+        //Tanker
+        if (creep.memory.source == 5){
+            if (creep.hits == creep.hitsMax){
+                creep.memory.tanking = true;
+            }
+            if (creep.hits < 1000){
+                creep.memory.tanking = false;
+            }
+            if(creep.memory.tanking){
+                creep.moveTo(Game.flags['Tank1'])
+            } else {
+                creep.moveTo(Game.flags['Heal1'])
+            }
+        }
+
+        //Claimer
+        if (creep.memory.source == 6){
+            var flag = Game.flags['Claim'];
+            creep.moveTo(flag);
+            if (creep.pos.inRangeTo(flag, 1)){
+                console.log('Claim in range');
+                console.log(creep.reserveController(creep.room.controller) );
+            }
+        }
+
+
+
     }//fim da function
 
 
@@ -115,51 +154,51 @@ var roleDefender = {
 
 
 
-	/*
-	 creep.pickupClosestEnergy();
+    /*
+     creep.pickupClosestEnergy();
 
-	 creep.room.memory.defenders ++;
+     creep.room.memory.defenders ++;
 
-	 if(creep.memory.defending && creep.carry.energy == 0) {
-	 creep.memory.defending = false;
-	 creep.say('harvesting');
-	 }
-	 if(!creep.memory.defending && creep.carry.energy == creep.carryCapacity) {
-	 creep.memory.defending = true;
-	 creep.say('defending');
-	 }
+     if(creep.memory.defending && creep.carry.energy == 0) {
+     creep.memory.defending = false;
+     creep.say('harvesting');
+     }
+     if(!creep.memory.defending && creep.carry.energy == creep.carryCapacity) {
+     creep.memory.defending = true;
+     creep.say('defending');
+     }
 
-	 if(creep.memory.defending) {
-	 var brothersAtArms = creep.room.find(FIND_MY_CREEPS, {
-	 filter: (mycreep) => mycreep.memory.role == 'defender' &&
-	 mycreep.memory.defending == true
-	 });
-	 if (brothersAtArms.length < 4){
-	 creep.say('gathering');
-	 var closestFriend = creep.pos.findClosestByPath(FIND_MY_CREEPS, {
-	 filter: (mycreep) => mycreep.memory.role == 'defender'
-	 });
-	 if (closestFriend){
-	 creep.moveTo(closestFriend);
-	 }
-	 } else {
-	 var closestHostile = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS);
-	 if (closestHostile){
-	 if (creep.attack(closestHostile) == ERR_NOT_IN_RANGE){
-	 creep.moveTo(closestHostile);
-	 }
-	 }
-	 }
+     if(creep.memory.defending) {
+     var brothersAtArms = creep.room.find(FIND_MY_CREEPS, {
+     filter: (mycreep) => mycreep.memory.role == 'defender' &&
+     mycreep.memory.defending == true
+     });
+     if (brothersAtArms.length < 4){
+     creep.say('gathering');
+     var closestFriend = creep.pos.findClosestByPath(FIND_MY_CREEPS, {
+     filter: (mycreep) => mycreep.memory.role == 'defender'
+     });
+     if (closestFriend){
+     creep.moveTo(closestFriend);
+     }
+     } else {
+     var closestHostile = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS);
+     if (closestHostile){
+     if (creep.attack(closestHostile) == ERR_NOT_IN_RANGE){
+     creep.moveTo(closestHostile);
+     }
+     }
+     }
 
 
-	 }
-	 else {
-	 var sources = creep.room.find(FIND_SOURCES);
-	 if(creep.harvest(sources[creep.memory.source]) == ERR_NOT_IN_RANGE) {
-	 creep.moveTo(sources[creep.memory.source]);
-	 }
-	 }
-	 }*/
+     }
+     else {
+     var sources = creep.room.find(FIND_SOURCES);
+     if(creep.harvest(sources[creep.memory.source]) == ERR_NOT_IN_RANGE) {
+     creep.moveTo(sources[creep.memory.source]);
+     }
+     }
+     }*/
 };
 
 module.exports = roleDefender;

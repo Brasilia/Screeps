@@ -34,7 +34,7 @@ var roomManager = {
         //Towers
         room.memory.towers = _.filter(structures, (structure) => structure.structureType == STRUCTURE_TOWER);
         //console.log('Room Towers: ' + room.memory.towers);
-        room.memory.towersNotFull = _.filter(room.memory.towers, (structure) => structure.energy < structure.energyCapacity/2);
+        room.memory.towersNotFull = _.filter(room.memory.towers, (structure) => structure.energy < 3*structure.energyCapacity/5);
         //console.log('Room Towers: ' + room.memory.towersNotFull);
     },
 

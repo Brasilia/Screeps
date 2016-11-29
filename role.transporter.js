@@ -22,6 +22,11 @@ var roleTransporter = {
                 if(creep.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(target);
                 }
+            } else {
+                var target = creep.pos.findClosestByPath(roomMemory.storage);
+                if(creep.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(target);
+                }
             }
         }
         else {
@@ -31,7 +36,7 @@ var roleTransporter = {
             if (roomMemory.towersNotFull.length > 0) targets = targets.concat(roomMemory.towersNotFull);  // = targets.concat(roomMemory.towersNotFull).concat(roomMemory.spawnNotFull).concat(roomMemory.extensionsNotFull);
             if (roomMemory.spawnsNotFull.length > 0) targets = targets.concat(roomMemory.spawnsNotFull);
             if (roomMemory.extensionsNotFull.length > 0) targets = targets.concat(roomMemory.extensionsNotFull);
-            if (roomMemory.storageNotFull.length > 0) targets = targets.concat(roomMemory.storageNotFull);
+            if (roomMemory.storageNotFull.length > 0 && roomMemory.containersNotFull.length == 0) targets = targets.concat(roomMemory.storageNotFull);
             //Concatenar container-hardcoded
             //console.log('spawns not full: ' + roomMemory.spawnsNotFull);
             //targets.push(roomMemory.towersNotFull);
@@ -50,7 +55,7 @@ var roleTransporter = {
                  });*/
                 targets = _.filter(Game.creeps, (c) => c.memory.role == 'upgrader' && c.carry.energy < c.carryCapacity/2 && c.memory.upgrading == true);
                 creep.say(targets);
-                if (targets.length){
+                if (targets.length && false){ //retirar false para continuar alimentando upgraders
                     creep.say(targets[0].name);
                     if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(targets[0]);
